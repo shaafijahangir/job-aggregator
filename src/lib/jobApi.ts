@@ -1,3 +1,4 @@
+// src/lib/jobApi.ts
 
 export interface Job {
   id: string;
@@ -17,14 +18,11 @@ export interface Job {
 
 export async function fetchJobs(): Promise<Job[]> {
   try {
-    // This will connect to your Express API once it's running
     const response = await fetch('http://localhost:3001/api/jobs');
-    if (!response.ok) {
-      throw new Error('Failed to fetch jobs');
-    }
+    if (!response.ok) throw new Error('Failed to fetch jobs');
+
     const data = await response.json();
-    
-    // Transform the scraped data to match our Job interface
+
     return data.map((job: any, index: number) => ({
       id: `job-${index}`,
       title: job.title || 'Unknown Title',
@@ -41,34 +39,33 @@ export async function fetchJobs(): Promise<Job[]> {
     }));
   } catch (error) {
     console.error('Error fetching jobs:', error);
-    // Return mock data as fallback
     return getMockJobs();
   }
 }
 
 function calculateDaysAgo(postedDate: string): number {
   if (!postedDate) return 0;
-  
+
   const today = new Date();
   const postDate = new Date(postedDate);
-  const diffTime = Math.abs(today.getTime() - postDate.getTime());
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-  return diffDays;
+  const diffTime = today.getTime() - postDate.getTime();
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  return isNaN(diffDays) ? 0 : diffDays;
 }
 
-function extractTags(title: string, description: string): string[] {
+function extractTags(title = '', description = ''): string[] {
   const text = `${title} ${description}`.toLowerCase();
-  const tags = [];
-  
-  if (text.includes('analyst') || text.includes('analysis')) tags.push('Analysis');
-  if (text.includes('developer') || text.includes('development')) tags.push('Development');
-  if (text.includes('system') || text.includes('systems')) tags.push('Systems');
+  const tags: string[] = [];
+
+  if (text.includes('analyst')) tags.push('Analysis');
+  if (text.includes('developer')) tags.push('Development');
+  if (text.includes('system')) tags.push('Systems');
   if (text.includes('government') || text.includes('municipal')) tags.push('Government');
   if (text.includes('remote')) tags.push('Remote');
   if (text.includes('it') || text.includes('technology')) tags.push('IT');
-  
-  return tags.length > 0 ? tags : ['General'];
+
+  return tags.length ? tags : ['General'];
 }
 
 function getMockJobs(): Job[] {
@@ -79,7 +76,7 @@ function getMockJobs(): Job[] {
       company: "City of Victoria",
       location: "Victoria, BC",
       type: "Full-time",
-      postedDate: "2 days ago",
+      postedDate: "2025-06-03",
       daysAgo: 2,
       salary: "$65,000 - $80,000",
       description: "Seeking a Systems Analyst to support municipal IT infrastructure and digital transformation initiatives.",
@@ -94,7 +91,7 @@ function getMockJobs(): Job[] {
       company: "BC Tech Startup",
       location: "Vancouver, BC",
       type: "Full-time",
-      postedDate: "1 day ago",
+      postedDate: "2025-06-04",
       daysAgo: 1,
       salary: "$70,000 - $90,000",
       description: "Join our growing team to build innovative web applications using React and Node.js.",

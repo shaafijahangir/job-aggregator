@@ -1,39 +1,46 @@
+// src/hooks/useJobs.ts
 
-import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchJobs, Job } from '@/lib/jobApi';
 
-export const useJobs = (filters: {
+interface Filters {
   keywords: string;
   location: string;
   source: string;
   dateRange: string;
-}) => {
-  const { data: jobs = [], isLoading, error, refetch } = useQuery({
+}
+
+export const useJobs = (filters: Filters) => {
+  const {
+    data: jobs = [],
+    isLoading,
+    error,
+    refetch
+  } = useQuery({
     queryKey: ['jobs'],
     queryFn: fetchJobs,
-    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+    refetchInterval: 1000 * 60 * 5, // every 5 minutes
   });
 
-  const filteredJobs = jobs.filter(job => {
-    // Keywords filter
+  const filteredJobs = jobs.filter((job) => {
+    // Keyword match
     if (filters.keywords) {
-      const searchText = filters.keywords.toLowerCase();
-      const jobText = `${job.title} ${job.company} ${job.description} ${job.tags.join(' ')}`.toLowerCase();
-      if (!jobText.includes(searchText)) return false;
+      const search = filters.keywords.toLowerCase();
+      const combined = `${job.title} ${job.company} ${job.description} ${job.tags.join(' ')}`.toLowerCase();
+      if (!combined.includes(search)) return false;
     }
 
-    // Location filter
+    // Location match
     if (filters.location && !job.location.includes(filters.location)) {
       return false;
     }
 
-    // Source filter
+    // Source match
     if (filters.source && job.source !== filters.source) {
       return false;
     }
 
-    // Date range filter
+    // Date range match
     if (filters.dateRange) {
       const daysLimit = parseInt(filters.dateRange);
       if (job.daysAgo > daysLimit) return false;
@@ -44,9 +51,9 @@ export const useJobs = (filters: {
 
   return {
     jobs: filteredJobs,
+    totalJobs: jobs.length,
     isLoading,
     error,
     refetch,
-    totalJobs: jobs.length
   };
 };
