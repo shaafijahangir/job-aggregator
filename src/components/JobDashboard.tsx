@@ -1,11 +1,14 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { JobFilters } from './JobFilters';
 import { JobList } from './JobList';
 import { JobDetailModal } from './JobDetailModal';
 import { CoverLetterGenerator } from './CoverLetterGenerator';
 import { JobStats } from './JobStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
+import { useJobs } from '@/hooks/useJobs';
 
 interface Filters {
   keywords: string;
@@ -23,8 +26,15 @@ export const JobDashboard = () => {
     dateRange: ''
   });
 
+  const { refetch } = useJobs(filters);
+
   const handleFiltersChange = (newFilters: Filters) => {
     setFilters(newFilters);
+  };
+
+  const handleRefreshJobs = () => {
+    refetch();
+    console.log('Refreshing jobs from API...');
   };
 
   return (
@@ -39,9 +49,13 @@ export const JobDashboard = () => {
             <span>📄</span>
             <span>Generate Cover Letter</span>
           </button>
-          <button className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800">
-            Refresh Jobs
-          </button>
+          <Button 
+            onClick={handleRefreshJobs}
+            className="bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-800 flex items-center space-x-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            <span>Refresh Jobs</span>
+          </Button>
         </div>
       </div>
 
