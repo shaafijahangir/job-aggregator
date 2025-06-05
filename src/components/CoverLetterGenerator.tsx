@@ -9,14 +9,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { FileText, Upload, Download, Wand2, Eye } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+const COHERE_API_KEY = '8sLMtMJdaUja1V41aQ0VwFFZIsZa5jxKv3uj3g57';
+
 export const CoverLetterGenerator = () => {
   const [jobDescription, setJobDescription] = useState('');
+  const [companyName, setCompanyName] = useState('');
+  const [positionTitle, setPositionTitle] = useState('');
   const [generatedLetter, setGeneratedLetter] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState('professional');
   const { toast } = useToast();
 
-  const handleGenerate = async () => {
+  const generateCoverLetter = async () => {
     if (!jobDescription.trim()) {
       toast({
         title: "Job description required",
@@ -28,43 +32,77 @@ export const CoverLetterGenerator = () => {
 
     setIsGenerating(true);
     
-    // Mock AI generation - in real app, this would call your backend API
-    setTimeout(() => {
-      const mockLetter = `Dear Hiring Manager,
+    try {
+      const prompt = `Generate a professional cover letter for the following job posting. Make it personalized and highlight relevant experience:
 
-I am writing to express my strong interest in the Systems Analyst position at your organization. With my extensive background in systems analysis, process optimization, and technical documentation, I am confident that I would be a valuable addition to your team.
+Job Description: ${jobDescription}
+Company: ${companyName || 'the organization'}
+Position: ${positionTitle || 'this position'}
 
-In my previous roles, I have successfully:
-• Analyzed complex business requirements and translated them into technical specifications
-• Implemented system improvements that resulted in 25% increased efficiency
-• Led cross-functional teams in delivering high-quality solutions on time and within budget
-• Developed comprehensive documentation and provided user training for new systems
+Requirements:
+- Professional tone
+- Highlight relevant technical skills
+- Show enthusiasm for the role
+- Include specific examples of experience
+- Keep it concise (under 400 words)
+- Format for business letter style
 
-My experience aligns well with your requirements for:
-- Strong analytical and problem-solving skills demonstrated through successful system optimization projects
-- Database management expertise with advanced SQL proficiency
-- Excellent communication skills evidenced by my role in stakeholder management and team leadership
+Generate only the cover letter content without any additional formatting or explanations.`;
 
-I am particularly drawn to this opportunity because of your organization's commitment to innovation and process improvement. I would welcome the chance to discuss how my background in systems analysis and passion for continuous improvement can contribute to your team's success.
+      const response = await fetch('https://api.cohere.ai/v1/generate', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${COHERE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'command',
+          prompt: prompt,
+          max_tokens: 500,
+          temperature: 0.7,
+          k: 0,
+          stop_sequences: [],
+          return_likelihoods: 'NONE'
+        }),
+      });
 
-Thank you for your consideration. I look forward to hearing from you.
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
-Sincerely,
-[Your Name]`;
-
-      setGeneratedLetter(mockLetter);
-      setIsGenerating(false);
+      const data = await response.json();
+      const generatedText = data.generations[0].text.trim();
+      
+      setGeneratedLetter(generatedText);
       toast({
         title: "Cover letter generated!",
         description: "Your personalized cover letter is ready for review.",
       });
-    }, 2000);
+    } catch (error) {
+      console.error('Error generating cover letter:', error);
+      toast({
+        title: "Generation failed",
+        description: "Failed to generate cover letter. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
-  const handleDownloadPDF = () => {
+  const downloadAsPDF = () => {
+    // This would typically call a backend service to generate PDF
     toast({
       title: "PDF Download",
-      description: "PDF generation would be handled by your backend service.",
+      description: "PDF generation requires backend service. The text version is ready for copy/paste.",
+    });
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(generatedLetter);
+    toast({
+      title: "Copied!",
+      description: "Cover letter copied to clipboard.",
     });
   };
 
@@ -95,25 +133,15 @@ Sincerely,
             </Select>
           </div>
 
-          {/* Job Description Input */}
-          <div>
-            <Label htmlFor="job-description">Job Description</Label>
-            <Textarea
-              id="job-description"
-              placeholder="Paste the job description here..."
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              className="mt-1 min-h-[200px]"
-            />
-          </div>
-
-          {/* Additional Options */}
+          {/* Company and Position */}
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="company-name">Company Name</Label>
               <Input 
                 id="company-name"
                 placeholder="e.g., City of Victoria"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
                 className="mt-1"
               />
             </div>
@@ -122,16 +150,30 @@ Sincerely,
               <Input 
                 id="position-title"
                 placeholder="e.g., Systems Analyst"
+                value={positionTitle}
+                onChange={(e) => setPositionTitle(e.target.value)}
                 className="mt-1"
               />
             </div>
           </div>
 
+          {/* Job Description Input */}
+          <div>
+            <Label htmlFor="job-description">Job Description</Label>
+            <Textarea
+              id="job-description"
+              placeholder="Paste the complete job description here..."
+              value={jobDescription}
+              onChange={(e) => setJobDescription(e.target.value)}
+              className="mt-1 min-h-[200px]"
+            />
+          </div>
+
           {/* Action Buttons */}
           <div className="flex space-x-3">
             <Button 
-              onClick={handleGenerate}
-              disabled={isGenerating}
+              onClick={generateCoverLetter}
+              disabled={isGenerating || !jobDescription.trim()}
               className="flex-1"
             >
               {isGenerating ? (
@@ -142,13 +184,9 @@ Sincerely,
               ) : (
                 <>
                   <Wand2 className="h-4 w-4 mr-2" />
-                  Generate Cover Letter
+                  Generate with Cohere AI
                 </>
               )}
-            </Button>
-            <Button variant="outline">
-              <Upload className="h-4 w-4 mr-2" />
-              Upload Resume
             </Button>
           </div>
         </CardContent>
@@ -168,18 +206,17 @@ Sincerely,
               <Textarea
                 value={generatedLetter}
                 onChange={(e) => setGeneratedLetter(e.target.value)}
-                className="min-h-[400px] font-mono text-sm"
+                className="min-h-[400px] text-sm"
                 placeholder="Your generated cover letter will appear here..."
               />
               
               <div className="flex space-x-3">
-                <Button onClick={handleDownloadPDF} className="flex-1">
+                <Button onClick={copyToClipboard} variant="outline" className="flex-1">
+                  📋 Copy Text
+                </Button>
+                <Button onClick={downloadAsPDF} className="flex-1">
                   <Download className="h-4 w-4 mr-2" />
                   Download PDF
-                </Button>
-                <Button variant="outline">
-                  <Eye className="h-4 w-4 mr-2" />
-                  Preview
                 </Button>
               </div>
 
@@ -197,7 +234,7 @@ Sincerely,
           ) : (
             <div className="text-center py-12 text-gray-500">
               <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Generate a cover letter to see it here</p>
+              <p>Paste a job description and click "Generate" to create your cover letter</p>
             </div>
           )}
         </CardContent>

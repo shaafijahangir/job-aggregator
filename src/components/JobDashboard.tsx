@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { JobFilters } from './JobFilters';
 import { JobList } from './JobList';
 import { JobDetailModal } from './JobDetailModal';
@@ -7,9 +7,25 @@ import { CoverLetterGenerator } from './CoverLetterGenerator';
 import { JobStats } from './JobStats';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+interface Filters {
+  keywords: string;
+  location: string;
+  source: string;
+  dateRange: string;
+}
+
 export const JobDashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
-  const [showCoverLetterGen, setShowCoverLetterGen] = useState(false);
+  const [filters, setFilters] = useState<Filters>({
+    keywords: '',
+    location: '',
+    source: '',
+    dateRange: ''
+  });
+
+  const handleFiltersChange = (newFilters: Filters) => {
+    setFilters(newFilters);
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -40,10 +56,10 @@ export const JobDashboard = () => {
         <TabsContent value="jobs" className="mt-6">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="lg:col-span-1">
-              <JobFilters />
+              <JobFilters onFiltersChange={handleFiltersChange} />
             </div>
             <div className="lg:col-span-3">
-              <JobList onJobSelect={setSelectedJob} />
+              <JobList onJobSelect={setSelectedJob} filters={filters} />
             </div>
           </div>
         </TabsContent>
@@ -58,7 +74,6 @@ export const JobDashboard = () => {
           job={selectedJob} 
           onClose={() => setSelectedJob(null)}
           onGenerateCoverLetter={() => {
-            setShowCoverLetterGen(true);
             setSelectedJob(null);
           }}
         />
