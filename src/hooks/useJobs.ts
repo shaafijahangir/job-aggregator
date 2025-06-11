@@ -1,16 +1,10 @@
+
 // src/hooks/useJobs.ts
 
 import { useQuery } from '@tanstack/react-query';
-import { fetchJobs, Job } from '@/lib/jobApi';
+import { fetchJobs, Job, JobFilters } from '@/lib/jobApi';
 
-interface Filters {
-  keywords: string;
-  location: string;
-  source: string;
-  dateRange: string;
-}
-
-export const useJobs = (filters: Filters) => {
+export const useJobs = (filters: JobFilters) => {
   const {
     data: jobs = [],
     isLoading,

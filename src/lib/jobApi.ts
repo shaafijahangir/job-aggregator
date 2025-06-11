@@ -1,21 +1,8 @@
 
 // src/lib/jobApi.ts
+import { Job } from './types';
 
-export interface Job {
-  id: string;
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  postedDate: string;
-  daysAgo: number;
-  salary?: string;
-  description: string;
-  tags: string[];
-  source: string;
-  sourceUrl: string;
-  isBookmarked: boolean;
-}
+export * from './types';
 
 export async function fetchJobs(): Promise<Job[]> {
   try {

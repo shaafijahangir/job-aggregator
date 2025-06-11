@@ -1,14 +1,10 @@
 
 import React, { useState } from 'react';
 import { Search } from 'lucide-react';
+import { JobFilters } from '@/lib/types';
 
 interface SearchFiltersProps {
-  onFiltersChange: (filters: {
-    keywords: string;
-    location: string;
-    source: string;
-    dateRange: string;
-  }) => void;
+  onFiltersChange: (filters: JobFilters) => void;
 }
 
 export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
