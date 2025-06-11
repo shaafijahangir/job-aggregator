@@ -89,7 +89,7 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
           >
             <option value="">All Sources</option>
             <option value="CivicJobs BC">CivicJobs BC</option>
-            <option value="BC Hydro">BC Hydro</option>
+            <option value="Remotive">Remotive</option>
             <option value="Going Global">Going Global</option>
             <option value="Glassdoor">Glassdoor</option>
             <option value="Jobs Bear">Jobs Bear</option>
