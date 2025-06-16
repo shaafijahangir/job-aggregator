@@ -13,8 +13,8 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
     <Dialog open={!!job} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">{job.title}</DialogTitle>
-          <div className="flex items-center space-x-4 text-gray-600">
+          <DialogTitle className="text-2xl font-bold text-foreground">{job.title}</DialogTitle>
+          <div className="flex items-center space-x-4 text-muted-foreground">
             <div className="flex items-center space-x-1">
               <Building className="h-4 w-4" />
               <span>{job.company}</span>
@@ -33,32 +33,32 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
         <div className="space-y-6">
           {/* Job Overview */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-secondary/20 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <DollarSign className="h-5 w-5 text-green-600" />
-                <span className="font-medium">Salary</span>
+                <span className="font-medium text-foreground">Salary</span>
               </div>
-              <p className="text-lg font-semibold text-green-600">{job.salary}</p>
+              <p className="text-lg font-semibold text-green-600 dark:text-green-400">{job.salary}</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-secondary/20 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <Clock className="h-5 w-5 text-blue-600" />
-                <span className="font-medium">Type</span>
+                <span className="font-medium text-foreground">Type</span>
               </div>
-              <p className="text-lg font-semibold">{job.type}</p>
+              <p className="text-lg font-semibold text-foreground">{job.type}</p>
             </div>
-            <div className="bg-gray-50 p-4 rounded-lg">
+            <div className="bg-secondary/20 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
                 <ExternalLink className="h-5 w-5 text-purple-600" />
-                <span className="font-medium">Source</span>
+                <span className="font-medium text-foreground">Source</span>
               </div>
-              <p className="text-lg font-semibold">{job.source}</p>
+              <p className="text-lg font-semibold text-foreground">{job.source}</p>
             </div>
           </div>
 
           {/* Tags */}
           <div>
-            <h3 className="font-semibold mb-2">Skills & Categories</h3>
+            <h3 className="font-semibold mb-2 text-foreground">Skills & Categories</h3>
             <div className="flex flex-wrap gap-2">
               {job.tags.map((tag, index) => (
                 <Badge key={index} variant="secondary">
@@ -72,15 +72,15 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
 
           {/* Job Description */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Job Description</h3>
+            <h3 className="text-lg font-semibold mb-3 text-foreground">Job Description</h3>
             <div className="prose max-w-none">
-              <p className="text-gray-700 leading-relaxed mb-4">
+              <p className="text-muted-foreground leading-relaxed mb-4">
                 {job.description}
               </p>
               
               {/* Mock detailed job description */}
-              <h4 className="font-semibold mt-6 mb-3">Key Responsibilities:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <h4 className="font-semibold mt-6 mb-3 text-foreground">Key Responsibilities:</h4>
+              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Analyze business requirements and translate them into technical specifications</li>
                 <li>Design and implement system improvements and automation solutions</li>
                 <li>Collaborate with cross-functional teams to deliver high-quality solutions</li>
@@ -88,8 +88,8 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
                 <li>Provide technical documentation and user training</li>
               </ul>
 
-              <h4 className="font-semibold mt-6 mb-3">Required Qualifications:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <h4 className="font-semibold mt-6 mb-3 text-foreground">Required Qualifications:</h4>
+              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Bachelor's degree in Computer Science, Information Systems, or related field</li>
                 <li>3+ years of experience in systems analysis or similar role</li>
                 <li>Strong analytical and problem-solving skills</li>
@@ -97,8 +97,8 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
                 <li>Excellent communication and documentation skills</li>
               </ul>
 
-              <h4 className="font-semibold mt-6 mb-3">Preferred Qualifications:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-gray-700">
+              <h4 className="font-semibold mt-6 mb-3 text-foreground">Preferred Qualifications:</h4>
+              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
                 <li>Experience with process automation tools</li>
                 <li>Knowledge of Agile/Scrum methodologies</li>
                 <li>Public sector experience an asset</li>
