@@ -1,20 +1,19 @@
-// scripts/scrapeJobPortals.js
 import { scrapeCivicJobs } from './jobPortals/civicjobsScraper.js';
 import { scrapeRemotiveJobs } from './jobPortals/remotiveScraper.js';
-
+import fs from 'fs';
+import path from 'path';
 
 async function runAllScrapers() {
-  console.log('🔄 Starting job scrapers...');
-  
-  //const civicJobs = await scrapeCivicJobs();
+  console.log('🔄 Starting all job scrapers...');
+
+  const civicJobs = await scrapeCivicJobs();
   const remotiveJobs = await scrapeRemotiveJobs();
 
-  //console.log(`✅ Scraped ${civicJobs.length} from CivicJobs`);
-  console.log(`✅ Scraped ${remotiveJobs.length} from Remotive`);
+  const allJobs = [...civicJobs, ...remotiveJobs];
 
-  console.log('🎉 All scraping completed');
+  const outputPath = path.resolve('data/allJobs.json');
+  fs.writeFileSync(outputPath, JSON.stringify(allJobs, null, 2));
+  console.log(`✅ Merged ${allJobs.length} jobs into data/allJobs.json`);
 }
 
 runAllScrapers();
-
-

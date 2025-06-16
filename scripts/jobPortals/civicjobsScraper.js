@@ -3,6 +3,7 @@ import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs';
 import path from 'path';
+import { v4 as uuidv4 } from 'uuid';
 
 puppeteer.use(StealthPlugin());
 
@@ -23,30 +24,27 @@ export async function scrapeCivicJobs() {
 
   const jobs = await page.$$eval('div[id^="jobbox-"]', cards => {
     return cards.map(card => {
-      const jobTitle = card.querySelector('span.fs-18')?.innerText.trim();
+      const position = card.querySelector('span.fs-18')?.innerText.trim();
       const company = card.querySelector('p.text-muted.fs-14.mb-0')?.innerText.trim();
 
       const locationAndTime = card.querySelector('.mdi-map-marker')?.parentNode?.textContent.trim() || '';
       const [location, postedDate] = locationAndTime.split(/\s{2,}|\n/).map(str => str.trim());
 
+      const description = `${(card.querySelector('.badge')?.innerText || '')} position at ${company}`;
       const url = card.querySelector('a')?.href;
-      const badges = card.querySelectorAll('.badge');
-      const timeCommitment = badges[0]?.innerText.trim() || null;
-      const employmentType = badges[1]?.innerText.trim() || null;
 
       return {
-        jobTitle,
+        id: crypto.randomUUID(),
         company,
         location,
+        position,
+        description,
         postedDate,
-        url,
-        timeCommitment,
-        employmentType,
-        source: 'CivicJobs BC'
+        source: 'CivicJobs BC',
+        url
       };
     });
   });
-
 
   const dataDir = path.resolve('data');
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
@@ -59,4 +57,4 @@ export async function scrapeCivicJobs() {
   return jobs;
 }
 
-const remotiveJobs = await scrapeCivicJobs();
+// const remotiveJobs = await scrapeCivicJobs();

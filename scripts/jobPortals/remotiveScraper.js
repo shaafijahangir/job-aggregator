@@ -3,6 +3,7 @@ import { chromium } from 'playwright';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { v4 as uuidv4 } from 'uuid';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,23 +18,24 @@ export async function scrapeRemotiveJobs() {
   await page.screenshot({ path: path.join(__dirname, 'remotiveScraperDebug.png'), fullPage: true });
 
   const jobs = await page.$$eval('.job-tile', (tiles) => {
-    return tiles
-      .map(tile => {
-        const title = tile.querySelector('span.remotive-bold')?.innerText.trim();
+    return tiles.map(tile => {
+        const position = tile.querySelector('span.remotive-bold')?.innerText.trim();
         const url = tile.closest('a')?.href || '#';
         const location = tile.innerText.includes('Worldwide') ? 'Worldwide' : 'Remote';
 
         // If title or url is missing, this card is probably invalid
         // Redundant code
-        if (title === 'No title' || url.startsWith('htt')) return null;
+        if (position === 'No title' || url.startsWith('htt')) return null;
 
         return {
-          title,
-          location,
-          url,
-          postedDate: 'Recently',
+          id: crypto.randomUUID(),
           company: 'Unknown',
-          source: 'Remotive'
+          location,
+          position,
+          description: `Remote job: ${position}`,
+          postedDate: 'Recently',
+          source: 'Remotive',
+          url
         };
       })
       .filter(Boolean); // Removes nulls

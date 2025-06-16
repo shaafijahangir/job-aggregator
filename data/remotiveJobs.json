@@ -1,274 +1,292 @@
 [
   {
-    "title": "Senior Shopify Developer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "a9fe9bdf-db31-4459-844e-c8e856905c26",
     "company": "Unknown",
-    "source": "Remotive"
+    "location": "Remote",
+    "position": "Senior Magento Developer",
+    "description": "Remote job: Senior Magento Developer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Freelance Writer",
+    "id": "689c07e5-613d-4c1d-a878-4d3fd90f1110",
+    "company": "Unknown",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Office Assistant",
+    "description": "Remote job: Office Assistant",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Senior Independent Software Developer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "326a5e5b-9861-45b5-a503-e4264f16f19c",
     "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Independent UX/UI Designer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Site Reliability Engineer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Data Scientist",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Collections Account Manager",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Freelance Writer",
+    "description": "Remote job: Freelance Writer",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Copywriter",
+    "id": "44d1a176-b7af-4420-bb84-8915a52d03f2",
+    "company": "Unknown",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Client Support Specialist",
+    "description": "Remote job: Client Support Specialist",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Ruby-on-Rails Engineer (Turbo/Stimulus/Hotwire)",
+    "id": "f535fa52-d540-480a-aed4-fca942e54afa",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Site Reliability Engineer",
+    "description": "Remote job: Senior Site Reliability Engineer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "af674eed-b0b2-42d5-9ac3-f2f62b209f2f",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Data Scientist",
+    "description": "Remote job: Senior Data Scientist",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "0780ecb1-0ff9-451c-b49d-da8fbf29cfbb",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Shopify Developer",
+    "description": "Remote job: Senior Shopify Developer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "44cdbe56-cf25-479b-90a6-69f720964bd4",
+    "company": "Unknown",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Collections Account Manager",
+    "description": "Remote job: Collections Account Manager",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Director of Content, Enterprise",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "c1cf73f5-1a7b-4cca-b1fc-1314c22385e0",
     "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "US Rater",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Ruby on Rails Developer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Full-Stack Engineer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Language teachers",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Odoo Developer",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Compliance Specialist",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Copywriter",
+    "description": "Remote job: Copywriter",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Senior Microsoft PowerBI Developer",
+    "id": "aa6e7553-0a1e-45d5-bdd1-47c5d6388f44",
+    "company": "Unknown",
+    "location": "Worldwide",
+    "position": "Ruby-on-Rails Engineer (Turbo/Stimulus/Hotwire)",
+    "description": "Remote job: Ruby-on-Rails Engineer (Turbo/Stimulus/Hotwire)",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "87817729-c938-42d6-8bdf-90d9ff3518ea",
+    "company": "Unknown",
     "location": "Remote",
-    "url": "#",
+    "position": "Director of Content, Enterprise",
+    "description": "Remote job: Director of Content, Enterprise",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Web Designer",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "20de8710-5b41-4066-a379-fb02676ecbe3",
     "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Logo Designer",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Senior Magento Developer",
     "location": "Remote",
-    "url": "#",
+    "position": "US Rater",
+    "description": "Remote job: US Rater",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Senior Backend Developer (Node.js)",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "3492c2eb-05bf-4b15-abf1-1a0d56708ed8",
     "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Client Support Specialist",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Office Assistant",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Email Deliverability Specialist",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "iOS Developer",
     "location": "Remote",
-    "url": "#",
+    "position": "Senior Ruby on Rails Developer",
+    "description": "Remote job: Senior Ruby on Rails Developer",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Virtual Assistant - Latin America",
+    "id": "7c3fe3dd-f062-4349-8cfc-fd55b74bbd7e",
+    "company": "Unknown",
     "location": "Remote",
-    "url": "#",
+    "position": "Language teachers",
+    "description": "Remote job: Language teachers",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Growth & Operations Manager (Creator Platforms)",
+    "id": "4bfe5032-f100-45c9-8bee-f66bb8b9f971",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Odoo Developer",
+    "description": "Remote job: Odoo Developer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "ec32be25-78b1-4e01-b854-d6a607cadcd0",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Microsoft PowerBI Developer",
+    "description": "Remote job: Senior Microsoft PowerBI Developer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "f62e678b-1e64-49d6-bc7a-c8e4804c6bac",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Independent Software Developer",
+    "description": "Remote job: Senior Independent Software Developer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "e9aa1e3f-b652-4ffd-8ce8-c568effbf982",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Senior Independent UX/UI Designer",
+    "description": "Remote job: Senior Independent UX/UI Designer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "c511ea76-1f6b-40ca-9fb9-503f6e17de35",
+    "company": "Unknown",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Property Compliance & AppFolio Migration Specialist",
+    "description": "Remote job: Property Compliance & AppFolio Migration Specialist",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Freelancer (m/w/d) im Inbound Kundenservice",
-    "location": "Remote",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "82330148-05d1-4780-92fb-04058fb8fbb5",
     "company": "Unknown",
-    "source": "Remotive"
-  },
-  {
-    "title": "Head of Marketing",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Email Deliverability Specialist",
+    "description": "Remote job: Email Deliverability Specialist",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "🇩🇪 Freelancer (m/w/d) Inbound Kundenservice",
+    "id": "c5cfd09b-cc20-4107-a29e-f2acdffe109e",
+    "company": "Unknown",
     "location": "Remote",
-    "url": "#",
+    "position": "iOS Developer",
+    "description": "Remote job: iOS Developer",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Internal Sales Representative - North America",
+    "id": "26e8a70c-c977-4498-98c4-b8271422c485",
+    "company": "Unknown",
     "location": "Remote",
-    "url": "#",
+    "position": "Virtual Assistant - Latin America",
+    "description": "Remote job: Virtual Assistant - Latin America",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "🇩🇪 German speaking Channel Lead (m/w/d) SEO",
+    "id": "eeb45609-4102-40e0-a4b0-6e7a409b2359",
+    "company": "Unknown",
     "location": "Worldwide",
-    "url": "#",
+    "position": "Growth & Operations Manager (Creator Platforms)",
+    "description": "Remote job: Growth & Operations Manager (Creator Platforms)",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Cloud Operations Engineer",
+    "id": "103564ce-aca5-4e85-a17f-37f94dd2e284",
+    "company": "Unknown",
     "location": "Remote",
-    "url": "#",
+    "position": "Freelancer (m/w/d) im Inbound Kundenservice",
+    "description": "Remote job: Freelancer (m/w/d) im Inbound Kundenservice",
     "postedDate": "Recently",
-    "company": "Unknown",
-    "source": "Remotive"
+    "source": "Remotive",
+    "url": "#"
   },
   {
-    "title": "Data Science Expert",
-    "location": "Worldwide",
-    "url": "#",
-    "postedDate": "Recently",
+    "id": "3cf44f73-26b1-44e4-a5e8-dfd9cc70c143",
     "company": "Unknown",
-    "source": "Remotive"
+    "location": "Worldwide",
+    "position": "Head of Marketing",
+    "description": "Remote job: Head of Marketing",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "c656d276-2b53-403d-b75d-06801ecf9ffc",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "🇩🇪 Freelancer (m/w/d) Inbound Kundenservice",
+    "description": "Remote job: 🇩🇪 Freelancer (m/w/d) Inbound Kundenservice",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "f13030e6-fb0a-4232-adf2-a2251754c30a",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Internal Sales Representative - North America",
+    "description": "Remote job: Internal Sales Representative - North America",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "93ff1330-f62a-4c86-82a6-2db0d95e365b",
+    "company": "Unknown",
+    "location": "Remote",
+    "position": "Cloud Operations Engineer",
+    "description": "Remote job: Cloud Operations Engineer",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
+  },
+  {
+    "id": "043a960b-3dd9-4a9c-ae0d-1d556d55369d",
+    "company": "Unknown",
+    "location": "Worldwide",
+    "position": "Data Science Expert",
+    "description": "Remote job: Data Science Expert",
+    "postedDate": "Recently",
+    "source": "Remotive",
+    "url": "#"
   }
 ]
