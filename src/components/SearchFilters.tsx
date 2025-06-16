@@ -13,25 +13,25 @@ interface SearchFiltersProps {
 
 export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
   const [keywords, setKeywords] = useState('');
-  const [location, setLocation] = useState('');
-  const [source, setSource] = useState('');
-  const [dateRange, setDateRange] = useState('');
+  const [location, setLocation] = useState('all');
+  const [source, setSource] = useState('all');
+  const [dateRange, setDateRange] = useState('all');
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleFilterChange = () => {
     onFiltersChange({
       keywords,
-      location,
-      source,
-      dateRange,
+      location: location === 'all' ? '' : location,
+      source: source === 'all' ? '' : source,
+      dateRange: dateRange === 'all' ? '' : dateRange,
     });
   };
 
   const clearFilters = () => {
     setKeywords('');
-    setLocation('');
-    setSource('');
-    setDateRange('');
+    setLocation('all');
+    setSource('all');
+    setDateRange('all');
     onFiltersChange({
       keywords: '',
       location: '',
@@ -40,7 +40,12 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
     });
   };
 
-  const activeFiltersCount = [keywords, location, source, dateRange].filter(Boolean).length;
+  const activeFiltersCount = [
+    keywords, 
+    location !== 'all' ? location : '', 
+    source !== 'all' ? source : '', 
+    dateRange !== 'all' ? dateRange : ''
+  ].filter(Boolean).length;
 
   React.useEffect(() => {
     handleFilterChange();
@@ -89,7 +94,7 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
               <SelectValue placeholder="All Locations" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Locations</SelectItem>
+              <SelectItem value="all">All Locations</SelectItem>
               <SelectItem value="Victoria, BC">Victoria, BC</SelectItem>
               <SelectItem value="Vancouver, BC">Vancouver, BC</SelectItem>
               <SelectItem value="Saanich, BC">Saanich, BC</SelectItem>
@@ -107,7 +112,7 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
               <SelectValue placeholder="Any time" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Any time</SelectItem>
+              <SelectItem value="all">Any time</SelectItem>
               <SelectItem value="1">Last 24 hours</SelectItem>
               <SelectItem value="3">Last 3 days</SelectItem>
               <SelectItem value="7">Last week</SelectItem>
@@ -124,7 +129,7 @@ export const SearchFilters = ({ onFiltersChange }: SearchFiltersProps) => {
               <SelectValue placeholder="All Sources" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Sources</SelectItem>
+              <SelectItem value="all">All Sources</SelectItem>
               <SelectItem value="CivicJobs BC">CivicJobs BC</SelectItem>
               <SelectItem value="Remotive">Remotive</SelectItem>
               <SelectItem value="WorkBC">WorkBC</SelectItem>
