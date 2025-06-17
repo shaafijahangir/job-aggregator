@@ -22,7 +22,8 @@ export async function scrapeCivicJobs() {
   }, { polling: 500, timeout: 0 });
   console.log('✅ Job listings found.');
 
-  const jobs = await page.$$eval('div[id^="jobbox-"]', cards => {
+  // Step 1: Scrape base metadata
+  const rawJobs = await page.$$eval('div[id^="jobbox-"]', cards => {
     return cards.map(card => {
       const position = card.querySelector('span.fs-18')?.innerText.trim();
       const company = card.querySelector('p.text-muted.fs-14.mb-0')?.innerText.trim();
@@ -30,22 +31,39 @@ export async function scrapeCivicJobs() {
       const locationAndTime = card.querySelector('.mdi-map-marker')?.parentNode?.textContent.trim() || '';
       const [location, postedDate] = locationAndTime.split(/\s{2,}|\n/).map(str => str.trim());
 
-      const description = `${(card.querySelector('.badge')?.innerText || '')} position at ${company}`;
-      const url = card.querySelector('a')?.href;
+      const relativeUrl = card.querySelector('a.text-dark')?.getAttribute('href') || '';
+      const url = `https://www.civicjobs.ca/${relativeUrl}`;
 
       return {
         id: crypto.randomUUID(),
         company,
         location,
         position,
-        description,
         postedDate,
-        source: 'CivicJobs BC',
-        url
+        url,
+        source: 'CivicJobs BC'
       };
     });
   });
 
+  // Step 2: Visit each job link to extract full description
+  const jobs = [];
+  for (const job of rawJobs) {
+    const jobPage = await browser.newPage();
+    try {
+      await jobPage.goto(job.url, { waitUntil: 'domcontentloaded' });
+      const description = await jobPage.$eval('div.card.job-detail.overflow-hidden', el => el.innerText.trim());
+      job.description = description;
+    } catch (err) {
+      console.warn(`⚠️ Failed to get description for ${job.url}`);
+      job.description = 'Description not available.';
+    } finally {
+      await jobPage.close();
+    }
+    jobs.push(job);
+  }
+
+  // Step 3: Save to file
   const dataDir = path.resolve('data');
   if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
 
@@ -57,4 +75,5 @@ export async function scrapeCivicJobs() {
   return jobs;
 }
 
-// const remotiveJobs = await scrapeCivicJobs();
+// Run it
+scrapeCivicJobs();

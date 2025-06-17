@@ -9,19 +9,20 @@ export async function fetchJobs(): Promise<Job[]> {
     console.log('🔄 Fetching jobs from public data files...');
     
     // Fetch both data sources
-    const [civicResponse, remotiveResponse] = await Promise.all([
+    const [civicResponse/*, remotiveResponse*/] = await Promise.all([
       fetch('/data/civicjobsJobs.json'),
-      fetch('/data/remotiveJobs.json')
+      //fetch('/data/remotiveJobs.json')
     ]);
 
-    if (!civicResponse.ok || !remotiveResponse.ok) {
+    if (!civicResponse.ok/* || !remotiveResponse.ok*/) {
       throw new Error('Failed to fetch job data');
     }
 
     const civicData = await civicResponse.json();
-    const remotiveData = await remotiveResponse.json();
+    //const remotiveData = await remotiveResponse.json();
 
-    console.log(`✅ Loaded ${civicData.length} CivicJobs and ${remotiveData.length} Remotive jobs`);
+    console.log(`✅ Loaded ${civicData.length} CivicJobs jobs`);
+    //console.log(`✅ Loaded ${civicData.length} CivicJobs and ${remotiveData.length} Remotive jobs`);
 
     // Transform CivicJobs data
     const civicJobs = civicData.map((job: any, index: number) => ({
@@ -38,7 +39,8 @@ export async function fetchJobs(): Promise<Job[]> {
       sourceUrl: job.url || '#',
       isBookmarked: false,
     }));
-
+    
+    /* 
     // Transform Remotive data
     const remotiveJobs = remotiveData.map((job: any, index: number) => ({
       id: `remotive-${index}`,
@@ -54,9 +56,10 @@ export async function fetchJobs(): Promise<Job[]> {
       sourceUrl: job.url || '#',
       isBookmarked: false,
     }));
-
+    */
+   
     // Combine all jobs
-    const allJobs = [...civicJobs, ...remotiveJobs];
+    const allJobs = [...civicJobs/*, ...remotiveJobs*/];
     console.log(`🎉 Total jobs loaded: ${allJobs.length}`);
     
     return allJobs;

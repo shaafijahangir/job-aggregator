@@ -1,12 +1,53 @@
-
-import React from 'react';
+import React, { useState } from 'react'; 
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { MapPin, Clock, Building, DollarSign, ExternalLink, FileText } from 'lucide-react';
+import jsPDF from 'jspdf';
 
-export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
+export const JobDetailModal = ({ job, onClose }) => { 
+  const [coverLetter, setCoverLetter] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const generateCoverLetter = async () => {
+    if (!job?.description) {
+      alert('❌ No job description found.');
+      return;
+    }
+
+    console.log('📤 Sending description:', job.description);
+
+    setLoading(true);
+    try {
+      const res = await fetch('http://localhost:3001/api/ai/generate-cover-letter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: job.description }),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setCoverLetter(data.content);
+      } else {
+        alert('❌ Failed to generate letter');
+      }
+    } catch (err) {
+      console.error('❌ Fetch error:', err);
+      alert('⚠️ Server error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const downloadPDF = (text, title) => {
+    const doc = new jsPDF();
+    const lines = doc.splitTextToSize(text, 180);
+    doc.text(lines, 10, 10);
+    doc.save(`${title}-cover-letter.pdf`);
+  };
+
   if (!job) return null;
 
   return (
@@ -108,14 +149,29 @@ export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
           </div>
         </div>
 
+        {coverLetter && (
+          <div className="mt-6 border p-4 bg-muted/20 rounded-lg">
+            <h3 className="font-bold text-lg mb-2 text-foreground">Generated Cover Letter</h3>
+            <p className="text-muted-foreground whitespace-pre-wrap">{coverLetter}</p>
+            <Button
+              variant="secondary"
+              className="mt-3"
+              onClick={() => downloadPDF(coverLetter, job.title)}
+            >
+              Download as PDF
+            </Button>
+          </div>
+        )}
+
         <DialogFooter className="flex flex-col sm:flex-row gap-3">
           <Button 
             variant="outline" 
-            onClick={onGenerateCoverLetter}
+            onClick={generateCoverLetter}
             className="flex items-center space-x-2"
+            disabled={loading}
           >
             <FileText className="h-4 w-4" />
-            <span>Generate Cover Letter</span>
+            <span>{loading ? 'Generating...' : 'Generate Cover Letter'}</span>
           </Button>
           <Button onClick={() => window.open('#', '_blank')} className="flex items-center space-x-2">
             <ExternalLink className="h-4 w-4" />
