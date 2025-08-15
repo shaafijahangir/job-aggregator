@@ -1,48 +1,72 @@
+// server/utils/coherePrompt.ts
 import { CohereClient } from 'cohere-ai';
 import { config } from 'dotenv';
+config();
 
-config(); // ✅ Loads .env
+const cohere = new CohereClient({ token: process.env.COHERE_API_KEY! });
 
-const cohere = new CohereClient({
-  token: process.env.COHERE_API_KEY!,
-});
-
-console.log(cohere);
-
-export async function coherePrompt(description: string): Promise<string> {
+export async function generateCoverLetter(description: string, profile?: string) {
   const prompt = `
-  
-  You are an expert cover letter writer who crafts clear, engaging, one page cover letters that show deep understanding of the role and company. I will give you two inputs: first the job description with its key requirements, responsibilities and company values; second a list of my past experiences, projects, tasks and technologies I’ve worked with. i want concrete paragraphs about each work experience. make sure they align with what i've done and what the job requirement is asking for.
+You are an expert cover letter writer who crafts clear, engaging, one-page cover letters.
 
-  start with Hi, I'm Shaafi and I look forward to applying for <position name> at <company name >as I believe I am a great fit for the role. I hold a Bachelor of Computer Science from the University of Victoria. (then write a line im interested in the company mission and can support it in <these ways>)
+Write a concise, friendly cover letter that:
+- Connects the candidate's background to the company's mission
+- Maps the core requirements in the job description to specific examples from experience
+- Emphasizes quick learning & adaptability
+- Notes the candidate holds a Bachelor of Computer Science from the University of Victoria
+- Ends with enthusiasm for next steps and an interview request
+- No citations, no em-dashes/hyphens
 
-  Your task is to write a concise and friendly cover letter that:
-  • Opens by connecting my passion and background to the company’s mission  
-  • Matches each core requirement in the job description to a specific example from my experience, demonstrating hands on skill with the required technologies  
-  • Emphasizes that I learn new tools quickly and adapt to evolving workflows  
-  • Notes that I hold a Bachelor of Computer Science from the University of Victoria.
-  • Closes with enthusiasm for next steps and invites an interview  
-  • End with Sincerely, M Shaafi Jahangir 
+Candidate:
+${profile ?? "Hi, I'm Shaafi. I hold a Bachelor of Computer Science from the University of Victoria."}
 
-  Other information:
-  • Don't use hyphens or em-dash
-  • Don't include citations
-  • I'm passionate. I love programming and are always looking to learn more and hone your craft.
-  • I have a sense of humility and ability to thrive in a team environment. I look for help when I'm stuck and you want to help my teammates when they need it. A knack for managing my time. I know when to go deeper on a task versus recognizing that it's time to get 'er done and move on to the next thing. Quality is important, but so is speed!
-  • Drive to execute. Projects I've worked on in the past (personal or professional) got finished, and got finished properly.
-  • I'm open to learning and look foward to stay at the company for the long haul.
-  • Please double check grammar.
+Job Description:
+${description}
 
-  Please use a professional yet friendly tone and keep it to one page. If you need any more details, ask me follow-up questions.  
+Keep it to one page. Double-check grammar. Output only the final letter text.
+`;
 
-  Job Description: ${description}`;
-
-  const response = await cohere.generate({
+  const resp = await cohere.generate({
     model: 'command-r-plus',
     prompt,
-    maxTokens: 500,
-    temperature: 0.7,
+    maxTokens: 600,
+    temperature: 0.6,
   });
 
-  return response.generations?.[0]?.text?.trim() ?? 'No result';
+  return resp.generations?.[0]?.text?.trim() ?? 'No result';
+}
+
+export async function generateResume(description: string, profile?: string) {
+  const prompt = `
+You are an expert technical resume writer. Generate a targeted, one-page resume
+as plain text for the candidate tailored to the job description. Use concise bullet
+points with measurable impact when possible. Do not include contact details header;
+start at the SUMMARY. No citations.
+
+Candidate:
+${profile ?? "M. Shaafi Jahangir — BSc, Computer Science (University of Victoria). Projects + internships in web dev, data, automation."}
+
+Job Description:
+${description}
+
+Sections:
+- SUMMARY (2–3 lines)
+- CORE SKILLS (comma-separated tech, tools, methodologies)
+- EXPERIENCE (2–3 roles or projects). For each:
+  • Title — Company — Year range  
+  • 3–5 bullets aligning to the JD
+- EDUCATION (BSc, University of Victoria)
+- OPTIONAL: CERTIFICATIONS if relevant
+
+Return only the resume text. Double-check grammar.
+`;
+
+  const resp = await cohere.generate({
+    model: 'command-r-plus',
+    prompt,
+    maxTokens: 700,
+    temperature: 0.5,
+  });
+
+  return resp.generations?.[0]?.text?.trim() ?? 'No result';
 }

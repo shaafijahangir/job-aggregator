@@ -1,4 +1,5 @@
-import React, { useState } from 'react'; 
+// JobDetailModal.tsx
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -6,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { MapPin, Clock, Building, DollarSign, ExternalLink, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
 
-export const JobDetailModal = ({ job, onClose }) => { 
+export const JobDetailModal = ({ job, onClose }) => {
   const [coverLetter, setCoverLetter] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -39,7 +40,6 @@ export const JobDetailModal = ({ job, onClose }) => {
       setLoading(false);
     }
   };
-
 
   const downloadPDF = (text, title) => {
     const doc = new jsPDF();
@@ -79,7 +79,9 @@ export const JobDetailModal = ({ job, onClose }) => {
                 <DollarSign className="h-5 w-5 text-green-600" />
                 <span className="font-medium text-foreground">Salary</span>
               </div>
-              <p className="text-lg font-semibold text-green-600 dark:text-green-400">{job.salary}</p>
+              <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+                {job.salary || 'Not specified'}
+              </p>
             </div>
             <div className="bg-secondary/20 p-4 rounded-lg">
               <div className="flex items-center space-x-2 mb-2">
@@ -111,40 +113,13 @@ export const JobDetailModal = ({ job, onClose }) => {
 
           <Separator />
 
-          {/* Job Description */}
+          {/* Job Description (from JSON only) */}
           <div>
             <h3 className="text-lg font-semibold mb-3 text-foreground">Job Description</h3>
             <div className="prose max-w-none">
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                {job.description}
+              <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
+                {job.description || 'No description available.'}
               </p>
-              
-              {/* Mock detailed job description */}
-              <h4 className="font-semibold mt-6 mb-3 text-foreground">Key Responsibilities:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                <li>Analyze business requirements and translate them into technical specifications</li>
-                <li>Design and implement system improvements and automation solutions</li>
-                <li>Collaborate with cross-functional teams to deliver high-quality solutions</li>
-                <li>Conduct system testing and user acceptance testing coordination</li>
-                <li>Provide technical documentation and user training</li>
-              </ul>
-
-              <h4 className="font-semibold mt-6 mb-3 text-foreground">Required Qualifications:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                <li>Bachelor's degree in Computer Science, Information Systems, or related field</li>
-                <li>3+ years of experience in systems analysis or similar role</li>
-                <li>Strong analytical and problem-solving skills</li>
-                <li>Experience with database management and SQL</li>
-                <li>Excellent communication and documentation skills</li>
-              </ul>
-
-              <h4 className="font-semibold mt-6 mb-3 text-foreground">Preferred Qualifications:</h4>
-              <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-                <li>Experience with process automation tools</li>
-                <li>Knowledge of Agile/Scrum methodologies</li>
-                <li>Public sector experience an asset</li>
-                <li>Project management certification</li>
-              </ul>
             </div>
           </div>
         </div>
@@ -173,7 +148,7 @@ export const JobDetailModal = ({ job, onClose }) => {
             <FileText className="h-4 w-4" />
             <span>{loading ? 'Generating...' : 'Generate Cover Letter'}</span>
           </Button>
-          <Button onClick={() => window.open('#', '_blank')} className="flex items-center space-x-2">
+          <Button onClick={() => window.open(job.sourceUrl, '_blank')} className="flex items-center space-x-2">
             <ExternalLink className="h-4 w-4" />
             <span>Apply on {job.source}</span>
           </Button>

@@ -50,16 +50,7 @@ export const JobDashboard = () => {
                 Discover opportunities across BC
               </p>
             </div>
-            <div className="flex space-x-3">
-              <Button variant="outline" className="flex items-center space-x-2">
-                <FileText className="h-4 w-4" />
-                <span>Cover Letter</span>
-              </Button>
-              <Button onClick={handleRefreshJobs} className="flex items-center space-x-2">
-                <RefreshCw className="h-4 w-4" />
-                <span>Refresh</span>
-              </Button>
-            </div>
+            {/* Removed the top-right buttons here */}
           </div>
         </div>
 

@@ -1,18 +1,18 @@
-// server/route/ai/generateCoverLetter.ts
+// server/route/ai/generateResume.ts
 import { Router } from 'express';
-import { generateCoverLetter } from '../../utils/coherePrompt';
+import { generateResume } from '../../utils/coherePrompt';
 
 const router = Router();
 
-router.post('/generate-cover-letter', async (req, res) => {
+router.post('/generate-resume', async (req, res) => {
   const { description, profile } = req.body;
   if (!description) return res.status(400).json({ error: 'Missing job description' });
 
   try {
-    const content = await generateCoverLetter(description, profile);
+    const content = await generateResume(description, profile);
     res.json({ success: true, content });
   } catch (err) {
-    console.error('❌ Cover letter error', err);
+    console.error('❌ Resume error', err);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 });

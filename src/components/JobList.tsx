@@ -1,26 +1,82 @@
-
-import React from 'react';
+// JobList.tsx
+import React, { useEffect, useMemo, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { MapPin, Clock, Building, Star, ExternalLink, RefreshCw } from 'lucide-react';
 import { useJobs } from '@/hooks/useJobs';
+import { isJobSaved, toggleJobSaved, onSavedChange } from '@/lib/savedStore';
+import { isApplied, markApplied, unapply, onAppliedChange } from '@/lib/appliedStore';
+import { apiGenerateCoverLetter, apiGenerateResume } from '@/lib/ai';
+import jsPDF from 'jspdf';
 
 interface JobListProps {
   onJobSelect: (job: any) => void;
-  filters: {
-    keywords: string;
-    location: string;
-    source: string;
-    dateRange: string;
-  };
+  filters: { keywords: string; location: string; source: string; dateRange: string };
+}
+
+type TabKey = 'all' | 'saved' | 'applied';
+
+function downloadPdf(filename: string, text: string) {
+  const doc = new jsPDF();
+  const lines = doc.splitTextToSize(text, 180);
+  doc.text(lines, 10, 10);
+  doc.save(filename);
 }
 
 export const JobList = ({ onJobSelect, filters }: JobListProps) => {
-  const { jobs, isLoading, error, refetch, totalJobs } = useJobs(filters);
+  const { jobs, isLoading, error, refetch } = useJobs(filters);
 
-  const handleQuickApply = (job: any) => {
-    window.open(job.sourceUrl, '_blank');
+  const [tab, setTab] = useState<TabKey>('all');
+  const [savedTick, setSavedTick] = useState(0);
+  const [appliedTick, setAppliedTick] = useState(0);
+
+  useEffect(() => onSavedChange(() => setSavedTick((t) => t + 1)), []);
+  useEffect(() => onAppliedChange(() => setAppliedTick((t) => t + 1)), []);
+
+  const savedCount = useMemo(
+    () => jobs.filter((j) => isJobSaved(j.id)).length,
+    [jobs, savedTick]
+  );
+  const appliedCount = useMemo(
+    () => jobs.filter((j) => isApplied(j.id)).length,
+    [jobs, appliedTick]
+  );
+
+  const visibleJobs = useMemo(() => {
+    if (tab === 'saved') return jobs.filter((j) => isJobSaved(j.id));
+    if (tab === 'applied') return jobs.filter((j) => isApplied(j.id));
+    return jobs;
+  }, [jobs, tab, savedTick, appliedTick]);
+
+  const openSource = (e: React.MouseEvent, url?: string) => {
+    e.stopPropagation();
+    if (!url) return;
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  const handleGenerateCover = async (e: React.MouseEvent, job: any) => {
+    e.stopPropagation();
+    if (!job?.description) return alert('No description found for this job.');
+    try {
+      const content = await apiGenerateCoverLetter(job.description);
+      downloadPdf(`${job.title}-cover-letter.pdf`, content);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to generate cover letter');
+    }
+  };
+
+  const handleGenerateResume = async (e: React.MouseEvent, job: any) => {
+    e.stopPropagation();
+    if (!job?.description) return alert('No description found for this job.');
+    try {
+      const content = await apiGenerateResume(job.description);
+      downloadPdf(`${job.title}-resume.pdf`, content);
+    } catch (err) {
+      console.error(err);
+      alert('Failed to generate resume');
+    }
   };
 
   if (isLoading) {
@@ -31,7 +87,6 @@ export const JobList = ({ onJobSelect, filters }: JobListProps) => {
       </div>
     );
   }
-
   if (error) {
     return (
       <div className="text-center py-12">
@@ -46,116 +101,191 @@ export const JobList = ({ onJobSelect, filters }: JobListProps) => {
 
   return (
     <div className="space-y-1">
+      {/* Tabs + refresh */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-6 text-sm">
-          <button className="text-blue-600 border-b-2 border-blue-600 pb-1">
+          <button
+            className={`${tab === 'all' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'} pb-1`}
+            onClick={() => setTab('all')}
+          >
             All Jobs ({jobs.length})
           </button>
-          <button className="text-gray-500 hover:text-gray-700">
-            Saved ({jobs.filter(j => j.isBookmarked).length})
+          <button
+            className={`${tab === 'saved' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'} pb-1`}
+            onClick={() => setTab('saved')}
+          >
+            Saved ({savedCount})
           </button>
-          <button className="text-gray-500 hover:text-gray-700">
-            Applied (0)
+          <button
+            className={`${tab === 'applied' ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'} pb-1`}
+            onClick={() => setTab('applied')}
+          >
+            Applied ({appliedCount})
           </button>
         </div>
         <Button onClick={() => refetch()} variant="outline" size="sm">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
+          <RefreshCw className="h-4 w-4 mr-2" /> Refresh
         </Button>
       </div>
 
-      {jobs.length === 0 ? (
+      {visibleJobs.length === 0 ? (
         <div className="text-center py-12 text-gray-500">
-          <p>No jobs match your current filters.</p>
-          <p className="text-sm mt-2">Try adjusting your search criteria.</p>
+          {tab === 'saved'
+            ? 'No saved jobs yet. Tap the ⭐ on any job to save it.'
+            : tab === 'applied'
+            ? 'No applied jobs yet. Use the checkbox on a job or click Apply.'
+            : 'No jobs match your current filters.'}
         </div>
       ) : (
-        jobs.map((job) => (
-          <Card 
-            key={job.id} 
-            className="hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200"
-            onClick={() => onJobSelect(job)}
-          >
-            <CardContent className="p-4">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center space-x-3 mb-2">
-                    <h3 className="text-lg font-semibold text-foreground hover:text-primary">
-                      {job.title}
-                    </h3>
-                    <button className="text-gray-400 hover:text-yellow-500">
-                      <Star className={`h-4 w-4 ${job.isBookmarked ? 'fill-current text-yellow-500' : ''}`} />
-                    </button>
-                    <button className="text-gray-400 hover:text-blue-500">
-                      <ExternalLink className="h-4 w-4" />
-                    </button>
-                    <span className="text-blue-600 text-sm font-medium">View</span>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
-                    <div className="flex items-center space-x-1">
-                      <Building className="h-4 w-4" />
-                      <span>{job.company}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{job.location}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{job.postedDate}</span>
-                    </div>
-                  </div>
+        visibleJobs.map((job) => {
+          const hasUrl = Boolean(job?.sourceUrl && job.sourceUrl !== '#');
+          const saved = isJobSaved(job.id);
+          const applied = isApplied(job.id);
 
-                  <p className="text-gray-700 mb-3 line-clamp-2">
-                    {job.description}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {job.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
+          return (
+            <Card
+              key={job.id}
+              onClick={() => onJobSelect(job)}
+              className={`relative transition-all duration-200 cursor-pointer border 
+                ${saved ? 'border-yellow-300 bg-yellow-50' : 'border-gray-200 hover:shadow-md'}`}
+            >
+              {/* Applied checkbox — top-right */}
+              <label
+                className="absolute right-3 top-3 inline-flex items-center gap-2 text-xs select-none"
+                onClick={(e) => e.stopPropagation()}
+                title={applied ? 'Marked as applied' : 'Mark as applied'}
+              >
+                <input
+                  type="checkbox"
+                  checked={applied}
+                  onChange={(e) => {
+                    if (e.target.checked) markApplied(job.id, { sourceUrl: job.sourceUrl });
+                    else unapply(job.id);
+                  }}
+                  className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className={`${applied ? 'text-blue-700' : 'text-gray-500'}`}>Applied</span>
+              </label>
 
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-4">
-                      {job.salary && (
-                        <span className="font-semibold text-green-600 text-sm">{job.salary}</span>
+              <CardContent className="p-4">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <h3 className="text-lg font-semibold text-foreground hover:text-primary">
+                        {job.title}
+                      </h3>
+
+                      {/* bookmark toggle */}
+                      <button
+                        className={`transition-colors ${saved ? 'text-yellow-500' : 'text-gray-400 hover:text-yellow-500'}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleJobSaved(job.id);
+                        }}
+                        aria-label={saved ? 'Unsave job' : 'Save job'}
+                        title={saved ? 'Unsave job' : 'Save job'}
+                      >
+                        <Star className={`h-4 w-4 ${saved ? 'fill-current' : ''}`} />
+                      </button>
+
+                      {/* open original posting */}
+                      <button
+                        className={`text-gray-400 ${hasUrl ? 'hover:text-blue-600' : 'opacity-40 cursor-not-allowed'}`}
+                        onClick={(e) => hasUrl && openSource(e, job.sourceUrl)}
+                        aria-label={hasUrl ? `Open posting on ${job.source}` : 'No link available'}
+                        title={hasUrl ? `Open posting on ${job.source}` : 'No link available'}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    {/* meta row */}
+                    <div className="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                      <div className="flex items-center space-x-1">
+                        <Building className="h-4 w-4" />
+                        <span>{job.company}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{job.location}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="h-4 w-4" />
+                        <span>{job.postedDate}</span>
+                      </div>
+                      {applied && (
+                        <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
+                          Applied
+                        </span>
                       )}
-                      <span className="text-xs text-gray-500">Source: {job.source}</span>
                     </div>
-                    <div className="flex space-x-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          console.log('Generate cover letter for:', job.title);
-                        }}
-                        className="text-xs"
-                      >
-                        📄 Generate Cover Letter
-                      </Button>
-                      <Button 
-                        variant="default" 
-                        size="sm" 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleQuickApply(job);
-                        }}
-                        className="bg-gray-900 hover:bg-gray-800 text-xs"
-                      >
-                        Apply
-                      </Button>
+
+                    <p className="text-gray-700 mb-3 line-clamp-2">{job.description}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {job.tags.map((tag: string, i: number) => (
+                        <Badge key={i} variant="secondary" className="text-xs bg-gray-100 text-gray-700">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center space-x-4">
+                        {job.salary && (
+                          <span className="font-semibold text-green-600 text-sm">{job.salary}</span>
+                        )}
+                        <span className="text-xs text-gray-500">Source: {job.source}</span>
+                      </div>
+
+                      <div className="flex flex-wrap gap-2">
+                        {/* Generate Cover Letter */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => handleGenerateCover(e, job)}
+                          disabled={!job?.description}
+                          className="text-xs"
+                        >
+                          📄 Generate Cover Letter
+                        </Button>
+
+                        {/* Generate Resume */}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => handleGenerateResume(e, job)}
+                          disabled={!job?.description}
+                          className="text-xs"
+                        >
+                          📑 Generate Resume
+                        </Button>
+
+                        {/* Apply (only opens when NOT applied) */}
+                        <Button
+                          variant={applied ? 'secondary' : 'default'}
+                          size="sm"
+                          disabled={applied || !hasUrl}
+                          title={applied ? 'Already marked as applied' : 'Open application link'}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (!applied && hasUrl) {
+                              markApplied(job.id, { sourceUrl: job.sourceUrl });
+                              window.open(job.sourceUrl, '_blank', 'noopener,noreferrer');
+                            }
+                          }}
+                          className={`text-xs ${applied ? 'cursor-default' : 'bg-gray-900 hover:bg-gray-800'}`}
+                        >
+                          {applied ? 'Applied' : 'Apply'}
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))
+              </CardContent>
+            </Card>
+          );
+        })
       )}
     </div>
   );
