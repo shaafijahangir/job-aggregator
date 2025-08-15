@@ -1,11 +1,16 @@
-// scripts/jobPortals/scrapeCivicJobs.js
+// scripts/jobPortals/civicJobsScraper.js
 import puppeteer from 'puppeteer-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { v4 as uuidv4 } from 'uuid';
 
 puppeteer.use(StealthPlugin());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..', '..'); // go up from jobPortals/ to project root
 
 export async function scrapeCivicJobs() {
   const browser = await puppeteer.launch({ headless: true });
@@ -64,10 +69,8 @@ export async function scrapeCivicJobs() {
   }
 
   // Step 3: Save to file
-  const dataDir = path.resolve('data');
-  if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir);
-
-  const outputPath = path.resolve('data/civicjobsJobs.json');
+  const outputPath = path.join(projectRoot, 'public', 'data', 'civicjobsJobs.json');
+  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
   fs.writeFileSync(outputPath, JSON.stringify(jobs, null, 2));
   console.log(`✅ Scraped ${jobs.length} jobs to ${outputPath}`);
 
@@ -75,5 +78,7 @@ export async function scrapeCivicJobs() {
   return jobs;
 }
 
-// Run it
-scrapeCivicJobs();
+// Allow direct execution
+if (import.meta.url === `file://${process.argv[1]}`) {
+  scrapeCivicJobs();
+}
