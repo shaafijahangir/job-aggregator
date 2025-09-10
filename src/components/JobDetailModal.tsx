@@ -7,7 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { MapPin, Clock, Building, DollarSign, ExternalLink, FileText } from 'lucide-react';
 import jsPDF from 'jspdf';
 
-export const JobDetailModal = ({ job, onClose }) => {
+export const JobDetailModal = ({ job, onClose, onGenerateCoverLetter }) => {
   const [coverLetter, setCoverLetter] = useState('');
   const [loading, setLoading] = useState(false);
 
